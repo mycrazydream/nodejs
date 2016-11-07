@@ -25,7 +25,8 @@ app.use((request, response, next) => {
 
 app.get('/', (request, response) => {  
   response.render('home', {
-    name: 'John'
+    name: 'John',
+	email: "johnny.b.good@bttf.com"
   })
 })
 
