@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Building nodejs project",
   "main": "index.js",
+  "engines": {
+    "node": "5.9.1"
+  }, 
   "dependencies": {
     "express-handlebars": "^3.0.0",
     "express": "^4.14.0",
@@ -16,9 +19,13 @@
     "type": "git",
     "url": "git+https://github.com/mycrazydream/nodejs.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "author": "mycrazydream",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mycrazydream/nodejs/issues"
   },
