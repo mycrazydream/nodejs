@@ -1,0 +1,8 @@
+{
+  "name": "Start on Heroku: Node.js with Handlebars",
+  "description": "Node.js app using Express and Heroku via GitHub",
+  "repository": "https://github.com/mycrazydream/nodejs.git",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": ["node", "express", "static"],
+  "image": "heroku/nodejs"
+}
