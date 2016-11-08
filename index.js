@@ -6,10 +6,67 @@ var 	mongod		= require('mongod');
 var	mongoose 	= require('mongoose');
 const 	app 		= express();
 const 	port		= 5000;
-const 	dbname		= 'nettuts';
+const 	dbname		= 'test';
 const 	dbport		= '27017';
-const 	dburl		= 'localhost:'+dbport+'/'+dbname;
-const 	db 		= mongoose.connect('mongodb://'+dburl);
+const 	dburl		= 'test:test@localhost:'+dbport+'/'+dbname;
+
+var Schema = mongoose.Schema;
+
+var userSchema =  new Schema({
+    first:	    String, 
+    last:	    String, 
+    dob:	    Date, 
+    gender:	    String,
+    hair_colour:String, 
+    occupation: String, 
+    nationality:String
+}, { collection: 'nettuts'});
+
+var User = mongoose.model('User', userSchema);
+
+app.get('/dbsave', function (request, response) {
+    mongoose.connect('mongodb://'+dburl);
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function() {/**
+	* Lets define our Model for User entity. This model represents a collection in the database.
+	* We define the possible schema of User document and data types of each field.
+	**/
+	
+
+	/**
+	* Lets Use our Models
+	**/
+
+	//Lets create a new user
+	var user1 = new User({
+	    first:	'Robert',
+	    last:	'Redford',
+	    dob:	'1936/08/18',
+	    gender:	'm',
+	    hair_colour:'Brown',
+	    occupation: 'actor',
+	    nationality:'american'
+	});
+
+	//Some modifications in user object
+	user1.name = user1.first.toUpperCase();
+
+	//Lets try to print and see it. You will see _id is assigned.
+	console.log(user1);
+
+	//Lets save it
+	user1.save(function (err, userObj) {
+	    if (err) {
+		console.log(err);
+	    } else {
+		console.log('saved successfully:', userObj);
+	    }
+	});
+
+	User.find({first:'Robert'}, function(a){ console.log(a); });
+    });
+});
 
 app.engine('.hbs', exphbs({  
     defaultLayout: 'main',
@@ -39,53 +96,21 @@ app.get('/', (request, response) => {
 })
 
 app.get('/dbget', function(request, response) {
-    db.collection('nettuts').find({nationality: 'american'});
-});
+    mongoose.connect('mongodb://'+dburl);
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
 
-app.get('/dbsave', function (request, response) {
-    /**
-    * Lets define our Model for User entity. This model represents a collection in the database.
-    * We define the possible schema of User document and data types of each field.
-    **/
-    var User = mongoose.model('User', {
-	first:	    String, 
-	last:	    String, 
-	dob:	    Date, 
-	gender:	    String,
-	hair_colour:String, 
-	occupation: String, 
-	nationality:String
-    });
 
-    /**
-    * Lets Use our Models
-    **/
-
-    //Lets create a new user
-    var user1 = new User({
-	first:	'Robert',
-	last:	'Redford',
-	dob:	'1936/18/08',
-	gender: 'm',
-	hair_colour: 'Brown',
-	occupation: 'actor',
-	nationality: 'american'
-    });
-
-    //Some modifications in user object
-    user1.name = user1.first.toUpperCase();
-
-    //Lets try to print and see it. You will see _id is assigned.
-    console.log(user1);
-
-    //Lets save it
-    user1.save(function (err, userObj) {
-  	if (err) {
-    	    console.log(err);
-  	} else {
-    	    console.log('saved successfully:', userObj);
-  	}
-    });	 
+    
+    db.once('open', function(){
+	User.find(function (err, users) {
+	    if (err) return console.error(err);
+	    response.render('home', {
+		name:   users[0].first,
+		email:  'johnny.b.good@bttf.com'
+	    })		
+	})
+    });	  
 });
 
 //time for a test
